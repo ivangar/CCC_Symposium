@@ -1,0 +1,370 @@
+<script type="text/javascript">
+    /*$.noConflict();*/
+    $(document).ready(function () {
+
+      var evaluationId = <?php if(isset($evaluation_id_fr)) {echo " '$evaluation_id_fr' ";} else echo ''; ?>;  //replace all section ids in the code
+      var no_questions = 6;
+
+      $( "#CCC-program-evaluation" ).submit(function( event ) {
+
+          // customize Parsley errors class to append the errorwraper ul inside the container div specified
+          $( '#CCC-program-evaluation' ).parsley( {
+              errors: {
+                  container: function (element, isRadioOrCheckbox) {
+                      var $container = element.parent().find(".parsley-container");
+                      if ($container.length === 0) {
+                          $container = $("<div class='parsley-container eval'></div>").insertBefore(element);
+                      }
+                      return $container;
+                  }
+              }
+          } );
+
+          //since the form is submitted using jQuery event, bind the form with Parsley.
+          var form_valid = $( '#CCC-program-evaluation' ).parsley( 'validate' );
+
+          //prevent form submission if parsley returns false
+          if ( !form_valid )
+          {
+              event.preventDefault();
+          }
+
+          //Gather all data and process after Parsley validations return success
+          else{
+
+              $( '#CCC-program-evaluation' ).parsley( 'destroy' );
+              
+              //Get all choice letters submitted (1, 2, 3, etc.)
+              var choices = new Object();
+
+              $('input[type="radio"]:checked').each(function() {
+                  var choice = (this.id).slice(-1);
+                  var question_id = this.name;
+                  choices[question_id]=choice;
+              });
+               
+              question_answer = $("#CCC-program-evaluation").serializeArray();
+               
+              evaluation_submitted = { "no_qs": no_questions, "qas":question_answer, "choices":choices, "program_section": evaluationId};
+              target = "resources/process_evaluation.php";
+
+              $.ajax({
+                  url: target,
+                  cache: false,
+                  type: "POST",
+                  dataType: "html",
+                  data: evaluation_submitted
+                }) 
+
+              .done(function( data ) {
+                  if (data === "failed"){
+                        $( ".parsley-container.evaluation" ).html( "<ul style='width: 673px;'> <li>L'évaluation du programme ne peut pas être traitée, veuillez selectionner les choix sur l'échele d'évaluation ci-dessous et cochez les questions requis.</li></ul>" );
+                        $( ".parsley-container.evaluation" ).show();
+                        $("html, body").animate({
+                          scrollTop: 0
+                        }, 500);     
+                  }
+
+                  if (data === "completed"){
+                      document.location.reload(true); //reload page in order to update access to post-test form
+                  }
+                  
+              })
+              .fail(function() {
+                    $( ".parsley-container.evaluation" ).html( "<ul style='width: 673px;'> <li>We are sorry, the questions were not submitted. Try again. </li></ul>" );
+                    $( ".parsley-container.evaluation" ).show();
+                        $("html, body").animate({
+                          scrollTop: 0
+                        }, 500);     
+              }); //ajax call
+
+          }//end else
+          
+          event.preventDefault();
+
+      }); //click function   
+
+  });//end document.ready
+</script>
+<table border="0" cellspacing="0">
+<tr valign="top">
+<td style="padding:0;width:685px;">
+<?php if( isset($sections_status['evaluation']) && $sections_status['evaluation'] ) { ?>  
+<div class="program_eval" style="padding:5px 0 0 10px;">
+    <h2>
+    Innovation, optimisation et perfectionnement du traitement antithrombotique dans la fibrillation auriculaire
+    </h2>
+    <h2>Évaluation du programme
+    </h2>
+    <h3>
+    Merci d'avoir évalué ce programme.
+    </h3>
+</div>
+<?php } else { ?>
+<form class="jotform-form" action="" method="post" data-ajax="false" name="CCC-program-evaluation" id="CCC-program-evaluation" accept-charset="utf-8">
+  <div class="program_eval" style="width:685px;">
+    <ul class="form-section">
+      <li class="form-line-custom"  style="margin:0;padding-top:0;padding-bottom:10px;">
+        <div  style="margin:0;">
+          <div class="form-html" style="padding:0;">
+              <h2>
+              Innovation, optimisation et perfectionnement du traitement antithrombotique dans la fibrillation auriculaire
+            </h2>
+             <h2>Évaluation du programme :</h2>
+             <h3>
+             Veuillez indiquer à quel point vous êtes d’accord avec chaque énoncé en utilisant l’échelle d’évaluation suivante : 
+            </h3>
+            <h3>1 – Pas du tout d’accord; 2 – Pas d’accord; 3 – Neutre; 4 – D’accord; 5 – Tout à fait d’accord
+            </h3>
+          </div>
+          <hr />
+        </div>
+        <div class="parsley-container evaluation backend" style="display:none;width: 678px;"> </div>
+      </li>
+      <li class="form-line-custom" >
+        <div id="header_prog_evaluation">
+          <div class="form-header-group wide_label">
+          <label class="form-label-top eval_label"> Le programme </label>
+        </div>
+      </div>
+      </li>
+      <li class="form-line-custom" id="id_1matrix">
+        <div id="cid_evaluation" class="form-input-wider">
+          <div class="form-single-column">
+          <table summary="" cellpadding="4" cellspacing="0" class="form-matrix-table-wide">
+            <tr>
+              <th style="border:none">
+                &nbsp;
+              </th>
+              <th class="form-matrix-column-headers form-matrix-column_0">
+                1
+              </th>
+              <th class="form-matrix-column-headers form-matrix-column_1">
+                2
+              </th>
+              <th class="form-matrix-column-headers form-matrix-column_2">
+                3
+              </th>
+              <th class="form-matrix-column-headers form-matrix-column_3">
+                4
+              </th>
+              <th class="form-matrix-column-headers form-matrix-column_4">
+                5
+              </th>
+            </tr>
+            <tr>
+              <th align="left" class="form-matrix-row-headers">
+                Le contenu du programme a contribué à améliorer mes connaissances.
+              </th>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_1_eval_1" name="BMS_107_FR_E_1" value="Pas du tout d’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_1_eval_2" name="BMS_107_FR_E_1" value="Pas d’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_1_eval_3" name="BMS_107_FR_E_1" value="Neutre" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_1_eval_4" name="BMS_107_FR_E_1" value="D’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_1_eval_5" name="BMS_107_FR_E_1" value="Tout à fait d’accord" />
+              </td>
+            </tr>            
+            <tr>
+              <th align="left" class="form-matrix-row-headers">
+                Le programme était pertinent à ma pratique.
+              </th>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_2_eval_1" name="BMS_107_FR_E_2" value="Pas du tout d’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_2_eval_2" name="BMS_107_FR_E_2" value="Pas d’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_2_eval_3" name="BMS_107_FR_E_2" value="Neutre" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_2_eval_4" name="BMS_107_FR_E_2" value="D’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_2_eval_5" name="BMS_107_FR_E_2" value="Tout à fait d’accord" />
+              </td>
+            </tr>
+            <tr>
+              <th align="left" class="form-matrix-row-headers">
+                Le programme a atteint les objectifs d’apprentissage spécifiés.
+              </th>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio"  id="input_3_eval_1" name="BMS_107_FR_E_3" value="Pas du tout d’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio"  id="input_3_eval_2" name="BMS_107_FR_E_3" value="Pas d’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio"  id="input_3_eval_3" name="BMS_107_FR_E_3" value="Neutre" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio"  id="input_3_eval_4" name="BMS_107_FR_E_3" value="D’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio"  id="input_3_eval_5"  name="BMS_107_FR_E_3" value="Tout à fait d’accord" />
+              </td>
+            </tr>
+            <tr>
+              <th align="left" class="form-matrix-row-headers">
+                Le format était efficace.
+              </th>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio"  id="input_4_eval_1" name="BMS_107_FR_E_4" value="Pas du tout d’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio"  id="input_4_eval_2" name="BMS_107_FR_E_4" value="Pas d’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio"  id="input_4_eval_3" name="BMS_107_FR_E_4" value="Neutre" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio"  id="input_4_eval_4" name="BMS_107_FR_E_4" value="D’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio"  id="input_4_eval_5" name="BMS_107_FR_E_4" value="Tout à fait d’accord" />
+              </td>
+            </tr>
+            <tr>
+              <th align="left" class="form-matrix-row-headers">
+                Le programme était dépourvu de biais et bien équilibré.
+              </th>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio"  id="input_5_eval_1" name="BMS_107_FR_E_5" value="Pas du tout d’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_5_eval_2" name="BMS_107_FR_E_5" value="Pas d’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_5_eval_3" name="BMS_107_FR_E_5" value="Neutre" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_5_eval_4" name="BMS_107_FR_E_5" value="D’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_5_eval_5" name="BMS_107_FR_E_5" value="Tout à fait d’accord" />
+              </td>
+            </tr>
+            <tr>
+              <th align="left" class="form-matrix-row-headers">
+                Ce programme aura un impact sur ma pratique.
+              </th>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_6_eval_1" name="BMS_107_FR_E_6" value="Pas du tout d’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_6_eval_2" name="BMS_107_FR_E_6" value="Pas d’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_6_eval_3" name="BMS_107_FR_E_6" value="Neutre" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_6_eval_4" name="BMS_107_FR_E_6" value="D’accord" />
+              </td>
+              <td align="center" class="form-matrix-values">
+                <input class="form-radio" type="radio" id="input_6_eval_5" name="BMS_107_FR_E_6" value="Tout à fait d’accord" />
+              </td>
+            </tr>
+          </table>
+          </div>
+        </div>
+      </li>
+      <li class="form-line-custom" >
+        <div id="text">
+          <div class="form-header-group wide_label">
+            <label class="form-label-top eval_label"> Veuillez répondre aux questions suivantes : </label>
+          </div>
+        </div>
+      </li>
+      <li class="form-line-custom" id="program_q_2" >
+        <div id="cid_2_Evaluation" class="form-input-wide">
+          <table summary="" cellpadding="4" cellspacing="0" class="form-matrix-table-wide">
+            <tr>
+              <th style="border:none" >
+                &nbsp;
+              </th>
+              <th class="form-matrix-column-headers title-row">
+               Oui
+              </th>
+              <th class="form-matrix-column-headers title-row">
+                Non
+              </th>
+            </tr>
+            <tr>
+              <th align="left" class="form-matrix-row-headers">
+                1. Avez-vous perçu des sources de biais commercial associé au programme?
+              </th>
+              <td align="center" class="form-matrix-values pretest-col">
+                <input class="form-checkbox" type="checkbox" name="BMS_107_FR_E_7" id="bias_yes" value="oui" />
+              </td>
+              <td align="center" class="form-matrix-values pretest-col">
+                <input class="form-checkbox" type="checkbox" name="BMS_107_FR_E_7" id="bias_no" value="non" />
+              </td>
+            </tr>
+          </table>
+        </div>
+      </li>
+      <li class="form-line-custom" id="program_q_3">
+        <label class="form-label-top eval_label" for="eval_q_3"> Si oui, veuillez préciser : </label>
+        <div id="cid_3_Evaluation" class="form-input-wider">
+                <textarea id="eval_q_3" class="form-textarea" parsley-error-message="Veuillez entrer 500 caractères maximum" parsley-maxlength="500"  name="bias" rows="3"></textarea>
+                <div class="eval_q_3 form-textarea-limit-indicator evaluation">500 caractères maximum </div>
+        </div>
+      </li>
+      <li class="form-line-custom" id="program_q_4">
+        <label class="form-label-top eval_label" for="eval_q_4"> 2. Décrivez deux atouts de ce programme : </label>
+        <div id="cid_4_Evaluation" class="form-input-wider">
+                <textarea id="eval_q_4" class="form-textarea" parsley-error-message="Veuillez entrer 500 caractères maximum" parsley-maxlength="500"  name="BMS_107_FR_E_8" rows="3"></textarea>
+                 <div class="eval_q_4 form-textarea-limit-indicator evaluation">500 caractères maximum </div>
+        </div>
+      </li>
+      <li class="form-line-custom" id="program_q_5">
+        <label class="form-label-top eval_label" for="eval_q_5"> 3. Changeriez-vous quoi que ce soit à ce programme? Si oui, veuillez préciser. </label>
+        <div id="cid_5_Evaluation" class="form-input-wider">
+                <textarea id="eval_q_5" class="form-textarea" parsley-error-message="Veuillez entrer 500 caractères maximum" parsley-maxlength="500"  name="BMS_107_FR_E_9" rows="3"></textarea>
+                <div class="eval_q_5 form-textarea-limit-indicator evaluation">500 caractères maximum </div>
+        </div>
+      </li>
+      <li class="form-line-custom" id="program_q_6">
+        <label class="form-label-top eval_label" for="eval_q_6"> 4. Selon ce que vous avez appris, que serez-vous en mesure d’appliquer à votre pratique? </label>
+        <div id="cid_6_Evaluation" class="form-input-wider">
+                <textarea id="eval_q_6" class="form-textarea" parsley-error-message="Veuillez entrer 500 caractères maximum" parsley-maxlength="500" name="BMS_107_FR_E_10" rows="3" ></textarea>
+                <div class="eval_q_6 form-textarea-limit-indicator evaluation">500 caractères maximum </div>
+        </div>
+      </li>
+      <li class="form-line-custom" id="program_q_7">
+        <label class="form-label-top eval_label" for="eval_q_7"> 5. Y a-t-il des sujets connexes que le programme devrait couvrir? </label>
+        <div id="cid_7_Evaluation" class="form-input-wider">
+                <textarea id="eval_q_7" class="form-textarea" parsley-error-message="Veuillez entrer 500 caractères maximum" parsley-maxlength="500" name="BMS_107_FR_E_11" rows="3" ></textarea>
+                <div class="eval_q_7 form-textarea-limit-indicator evaluation">500 caractères maximum </div>
+        </div>
+      </li>
+      <li class="form-line-custom" id="program_q_8">
+        <label class="form-label-top eval_label" for="eval_q_8"> 6. Commentaires généraux et suggestions : </label>
+        <div id="cid_8_Evaluation" class="form-input-wider">
+                <textarea id="eval_q_8" class="form-textarea" parsley-error-message="Veuillez entrer 500 caractères maximum" parsley-maxlength="500" name="BMS_107_FR_E_12" rows="3" ></textarea>
+                <div class="eval_q_8 form-textarea-limit-indicator evaluation">500 caractères maximum </div>
+        </div>
+      </li>
+      <li id="eval_actions">
+        <div id="cid_eval_actions" >
+          <div style="padding:0 10px 0 10px;" class="form-buttons-wrapper">
+            <button id="submit_evaluation" type="submit" class="big-form-button">Soumettre</button>
+            <button id="reset_eval_form" type="reset" class="form-submit-reset big-form-button">Effacer le formulaire</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</form>
+<?php }//Close else tag ?>
+</td>
+  </tr>
+</table>

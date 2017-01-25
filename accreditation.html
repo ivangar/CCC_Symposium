@@ -1,0 +1,78 @@
+<script type="text/javascript">
+    /*$.noConflict();*/
+    $(document).ready(function () {
+      var programId = <?php if(isset($program_id_fr)) {echo " '$program_id_fr' ";} else echo ''; ?>;  //program Id
+      var user = <?php if(isset($_SESSION['user_id'])) {echo $_SESSION['user_id']; } else echo 0; ?>;
+
+  });//end document.ready
+</script>
+<div class="innerContentFrame">
+   <table style="width:100%;" >
+      <tr valign="top">
+        <td style="vertical-align:top;padding: 0; width:690px" >
+<form class="jotform-form" action="" method="post" name="AIT-program-accreditation" id="AIT-program-accreditation" accept-charset="utf-8">
+  <div class="program_evaluation" style="width:620px;">
+    <ul class="form-section">
+      <li class="form-line accreditation-form" >
+        <div  style="margin:0;">
+          <div class="form-html " style="padding:0;">
+            <h2>
+              Innovation, optimisation et perfectionnement du traitement antithrombotique dans la fibrillation auriculaire
+            </h2>
+             <h2>Critères d’agrément :</h2>
+             <h3>
+             Aux fins de l'agrément et pour l'attribution du certificat de participation, vous devez réussir chacune des sections énumérées ci-dessous.
+            </h3>
+            <h3>Après l'achèvement de l'ensemble de ces sections, vous recevrez un lien sur lequel vous devrez cliquer pour demander votre certificat.
+            </h3>
+          </div>
+          <hr />
+        </div>
+      </li>
+      <li class="form-line accreditation-form" >
+        <div id="header_prog_evaluation">
+          <div class="form-header-group cert_label">
+          <h3>Programme de MDC du Collège royal</h3> 
+        </div>
+      </div>
+      </li>
+      <li class="form-line accreditation-form" id="id_2matrix">
+        <div id="cid_accrediation" >
+          <table summary="" cellpadding="4" cellspacing="0" class="form-matrix-table status_table">
+            <tr>
+              <th style="border:none" >
+                &nbsp;
+              </th>
+              <th class="form-matrix-column-headers title-row">
+                Forum de discussion
+              </th>
+              <th class="form-matrix-column-headers title-row">
+                Évaluation du programme
+              </th>
+            </tr>
+            <tr>
+              <th align="center" class="form-matrix-row-headers" style="width:140px;">
+                Section(s) complétée(s)
+              </th>
+              <td align="center" class="form-matrix-values" style="width:130px;">
+                <input class="form-checkbox" type="checkbox" name="q1_clickTo[0]" <?php if( isset($sections_status['forum']) && $sections_status['forum'] ) echo 'checked';?> disabled />
+              </td>
+              <td align="center" class="form-matrix-values" style="width:130px;">
+                <input class="form-checkbox" type="checkbox" name="q1_clickTo[0]" <?php if( isset($sections_status['evaluation']) && $sections_status['evaluation'] ) echo 'checked';?> disabled  />
+              </td>
+            </tr>
+          </table>
+        </div>
+      </li>
+      <li id="eval_actions">
+          <div style="padding:0 10px 0 0;">
+              <?php if($program_completed) { echo "<a href='http://ccs.ca/fr/developpement-professionnel/certificats-de-participation' style='font-size: 15px;color: #1477bb;cursor: pointer;font-weight: bold;margin: 0;padding: 0;' target='_blank' >Obtenir votre certificat</a>"; }?>
+          </div>
+      </li>
+    </ul>
+  </div>
+</form>
+  </td>
+    </tr>
+    </table>
+</div>
