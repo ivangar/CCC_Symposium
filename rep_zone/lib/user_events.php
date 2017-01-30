@@ -185,7 +185,7 @@ class userEvents{
                                     <th class='col-sm-3'>Date et heure de la séance</th>
                                     <th class='col-sm-3 col-md-4'>Lieu</th>
                                     <th class='col-sm-1'>Nombre de participants</th>
-                                    <th class='col-sm-2 col-md-1'>Statut de l’événement</th>
+                                    <th class='col-sm-2 col-md-1'>Statut de l’activité</th>
                                     <th class='col-sm-1'></th>
                                   </tr>
                                 </thead>
@@ -204,7 +204,7 @@ class userEvents{
                                     <th class='col-sm-3'>Date et heure de la séance</th>
                                     <th class='col-sm-5 col-md-6'>Lieu</th>
                                     <th class='col-sm-1'>Nombre de participants</th>
-                                    <th class='col-sm-2 col-md-1'>Statut de l’événement</th>
+                                    <th class='col-sm-2 col-md-1'>Statut de l’activité</th>
                                     <th class='col-sm-1'></th>
                                   </tr>
                                 </thead>
@@ -391,11 +391,11 @@ class userEvents{
         $page = substr($page, 0, 14);
 
         if (strcmp($page, "all_events.php") === 0) {
-            $alert = "<div class='alert alert-warning fade in' role='alert' ><h4>Aucun événement trouvé. <a href='new_event.php' style='color:#428bca;'> &nbsp; Cliquez ici pour ajouter un événement.</a></h4></div>";
+            $alert = "<div class='alert alert-warning fade in' role='alert' ><h4>Aucun activité trouvé. <a href='new_event.php' style='color:#428bca;'> &nbsp; Cliquez ici pour ajouter un activité.</a></h4></div>";
         }
 
         else{
-            $alert = "<div class='alert alert-warning fade in' role='alert' ><h4>Aucun événement trouvé. <a href='new_event.php' style='color:#428bca;'> &nbsp; Cliquez ici pour ajouter un événement.</a> </h4></div>";
+            $alert = "<div class='alert alert-warning fade in' role='alert' ><h4>Aucun activité trouvé. <a href='new_event.php' style='color:#428bca;'> &nbsp; Cliquez ici pour ajouter un activité.</a> </h4></div>";
         }
 
 		echo $alert;	
