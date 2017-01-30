@@ -1,2 +1,20 @@
+<<<<<<< HEAD
 
 CCC_Symposium_mamp_french/
+=======
+# Ignore media files #
+*.mp4
+*.pdf
+*.jpg
+*.JPG
+*.jpeg
+*.png
+*.gif
+*.ppt
+*.pptx
+*.xls
+*.xlsx
+*.doc
+*.docx
+*.DS_Store
+>>>>>>> FETCH_HEAD
