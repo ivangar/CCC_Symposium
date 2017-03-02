@@ -2,7 +2,7 @@ $(function () {
     $("html, body").animate({ scrollTop: 270 }, 1000);
 
     $("#COI").uploadFile({
-        url:"../lib/upload.php?update=true&file=COI&folderID="+folderId,
+        url:"../lib/upload.php?update=true&file=COI&folderID="+folderId+'&moderatorName='+moderatorName,
         multiple:false,
         dragDrop:false,
         maxFileCount:1,
@@ -66,7 +66,7 @@ $(function () {
 
 
     $("#honorarium").uploadFile({
-        url:"../lib/upload.php?update=true&file=honorarium&folderID="+folderId,
+        url:"../lib/upload.php?update=true&file=honorarium&folderID="+folderId+'&moderatorName='+moderatorName,
         multiple:false,
         dragDrop:false,
         maxFileCount:1,
@@ -129,7 +129,7 @@ $(function () {
     });
 
     $("#signin").uploadFile({
-        url:"../lib/upload.php?update=true&file=signin&folderID="+folderId,
+        url:"../lib/upload.php?update=true&file=signin&folderID="+folderId+'&moderatorName='+moderatorName,
         multiple:false,
         dragDrop:false,
         maxFileCount:1,
@@ -192,7 +192,7 @@ $(function () {
     });
 
     $("#evaluation").uploadFile({
-        url:"../lib/upload.php?update=true&file=evaluation&folderID="+folderId,
+        url:"../lib/upload.php?update=true&file=evaluation&folderID="+folderId+'&moderatorName='+moderatorName,
         multiple:false,
         dragDrop:false,
         maxFileCount:1,
