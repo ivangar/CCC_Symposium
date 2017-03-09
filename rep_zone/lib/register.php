@@ -90,6 +90,31 @@ class Register
         session_start();
     }
 
+
+    //check if email has already been registered
+    public function IsFieldUnique($email)
+    {
+        $sql = "SELECT COUNT(*) FROM reps WHERE email = :email";
+
+        $query = $this->db_connection->prepare($sql);
+        $query->bindValue(':email', $email);
+        $query->execute();
+
+        while($result_row = $query->fetch() ){
+            if($result_row['COUNT(*)'] == 0){
+                return true;
+            }
+            else{
+                echo "Ce courriel est déjà enregistré";
+                return false;
+            }
+        }
+
+        
+    }
+
+
+
     /**
      * Process flow of login with POST data
      */
@@ -152,19 +177,22 @@ class Register
     {
         $this->compileData();
         
-        $insert_query = "INSERT INTO reps (rep_name, company, email, phone) VALUES (:rep_name,:company,:email,:phone)";
-        $query = $this->db_connection->prepare($insert_query);
-        
-        $query->execute(array(':rep_name'=>$this->data["rep_name"],
-                  ':company'=>$this->data["rep_company"],
-                  ':email'=>$this->data["rep_email"],
-                  ':phone'=>$this->data["rep_phone"]                 
-                  ));
+        if($this->IsFieldUnique($this->data["rep_email"])){ 
 
-        $this->user_id = $this->db_connection->lastInsertId();
-        $this->feedback = "registered";
+            $insert_query = "INSERT INTO reps (rep_name, company, email, phone) VALUES (:rep_name,:company,:email,:phone)";
+            $query = $this->db_connection->prepare($insert_query);
+            
+            $query->execute(array(':rep_name'=>$this->data["rep_name"],
+                      ':company'=>$this->data["rep_company"],
+                      ':email'=>$this->data["rep_email"],
+                      ':phone'=>$this->data["rep_phone"]                 
+                      ));
 
-        return true;
+            $this->user_id = $this->db_connection->lastInsertId();
+            $this->feedback = "registered";
+
+            return true;
+        }
     }
 
     /**
